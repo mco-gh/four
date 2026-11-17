@@ -1,6 +1,6 @@
-# Connect4
+# Four
 
-Peer-to-peer Connect Four for two, played in the browser at [mco.dev/connect4](https://mco.dev/connect4/).
+Peer-to-peer four in a row for two, played in the browser at [mco.dev/four](https://mco.dev/four/).
 
 It is a static app with no build step: open `index.html` from any web server. The two players connect directly to each other using [PeerJS](https://peerjs.com/) (vendored in `vendor/`).
 
@@ -9,12 +9,12 @@ It is a static app with no build step: open `index.html` from any web server. Th
 - `net.js`, `ice.js`: the link between the two browsers
 - `app.js`: the lobby, game flow, rematches and score, chat, video and settings
 
-This repo is mounted in [mco-gh/mco.dev](https://github.com/mco-gh/mco.dev) as a git submodule at `static/connect4`. After pushing a change here, update the submodule pointer there to publish it:
+This repo is mounted in [mco-gh/mco.dev](https://github.com/mco-gh/mco.dev) as a git submodule at `static/four`. After pushing a change here, update the submodule pointer there to publish it:
 
 ```bash
 cd mco.dev
-git submodule update --remote static/connect4
-git commit -am "Update connect4"
+git submodule update --remote static/four
+git commit -am "Update four"
 git push
 ```
 

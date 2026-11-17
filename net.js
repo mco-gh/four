@@ -4,7 +4,7 @@
 /* global Peer */
 import { iceServers } from './ice.js';
 
-const PREFIX = 'connect4-game-';
+const PREFIX = 'four-game-';
 // How long to try before telling a joining player the link can't be made.
 const CONNECT_TIMEOUT = 20000;
 const ALPHABET = 'abcdefghjkmnpqrstuvwxyz23456789';   // no look-alikes
@@ -25,8 +25,8 @@ export function cleanCode(text) {
 // Lets the host tell a returning opponent from a stranger with the code.
 function guestId() {
   try {
-    let id = sessionStorage.getItem('connect4-guest');
-    if (!id) sessionStorage.setItem('connect4-guest', (id = crypto.randomUUID()));
+    let id = sessionStorage.getItem('four-guest');
+    if (!id) sessionStorage.setItem('four-guest', (id = crypto.randomUUID()));
     return id;
   } catch {
     return crypto.randomUUID();
@@ -111,7 +111,7 @@ export function openLink({ code, host, on }) {
       if (!host) return c.close();
       const id = c.metadata?.id;
       if (conn && id !== guest) {
-        // Connect4 is for two. Tell the newcomer, then let them go.
+        // Four is for two. Tell the newcomer, then let them go.
         c.on('open', () => { c.send({ t: 'full' }); setTimeout(() => c.close(), 500); });
         return;
       }

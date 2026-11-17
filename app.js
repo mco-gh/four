@@ -1,4 +1,4 @@
-// Connect4: the page logic. rules.js knows the game, board.js draws, net.js
+// Four: the page logic. rules.js knows the game, board.js draws, net.js
 // connects; this file runs the lobby, the game flow, chat, video and settings.
 import * as Rules from './rules.js';
 import { Board } from './board.js';
@@ -22,7 +22,8 @@ const CSS_VAR = { me: '--me', them: '--them', board: '--board', glow: '--glow' }
 
 function loadColors() {
   try {
-    const saved = JSON.parse(localStorage.getItem('connect4-colors'));
+    // Colors saved before the app was renamed from Connect4 still count.
+    const saved = JSON.parse(localStorage.getItem('four-colors') ?? localStorage.getItem('connect4-colors'));
     const ok = saved && Object.keys(CSS_VAR).every((k) => /^#[0-9a-f]{6}$/i.test(saved[k]));
     if (ok) return saved;
   } catch {}
@@ -42,7 +43,7 @@ function applyColors(save = false) {
     const theme = THEMES[button.dataset.theme];
     button.setAttribute('aria-pressed', String(Object.keys(CSS_VAR).every((k) => theme[k] === colors[k])));
   }
-  if (save) try { localStorage.setItem('connect4-colors', JSON.stringify(colors)); } catch {}
+  if (save) try { localStorage.setItem('four-colors', JSON.stringify(colors)); } catch {}
 }
 
 for (const [name, theme] of Object.entries(THEMES)) {
@@ -260,7 +261,7 @@ $('lost').addEventListener('cancel', (event) => event.preventDefault());
 if (navigator.share) {
   $('share-btn').hidden = false;
   $('share-btn').addEventListener('click', () => {
-    navigator.share({ title: 'Connect4', text: 'Play Connect Four with me!', url: inviteLink() }).catch(() => {});
+    navigator.share({ title: 'Four', text: 'Play four in a row with me!', url: inviteLink() }).catch(() => {});
   });
 }
 
@@ -627,7 +628,7 @@ if ('CommandEvent' in window) {
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
 setLobby('idle');
-// Opening an invite link in a tab that already has Connect4 open only changes the hash.
+// Opening an invite link in a tab that already has Four open only changes the hash.
 addEventListener('hashchange', () => {
   if (!game && !link && location.hash.length > 1) join(location.hash);
 });

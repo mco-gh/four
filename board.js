@@ -1,4 +1,4 @@
-// Draws a Connect Four board: discs fall behind a frame with holes in it. Each
+// Draws a Four board: discs fall behind a frame with holes in it. Each
 // column is a button, so a mouse, a finger or the keyboard can drop a disc.
 import { COLS, ROWS, at, canDrop } from './rules.js';
 

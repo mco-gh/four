@@ -1,4 +1,4 @@
-// The rules of Connect Four. Seven columns, six rows; discs drop to the lowest
+// The rules of Four (four in a row). Seven columns, six rows; discs drop to the lowest
 // empty space. Four in a row (across, down or diagonally) wins; a full board
 // is a draw. Players are 0 (who moves first) and 1.
 export const COLS = 7;

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Connect4 — four in a row, wherever you are</title>
-  <meta name="description" content="Play Connect Four online with a friend. No sign-up: start a game, share the code and drop your discs. Peer to peer, with optional video and chat.">
+  <title>Four — get four in a row, wherever you are</title>
+  <meta name="description" content="Play four in a row online with a friend. No sign-up: start a game, share the code and drop your discs. Peer to peer, with optional video and chat.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#fff4e4" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#17122b" media="(prefers-color-scheme: dark)">
@@ -29,12 +29,12 @@
           <circle class="logo-b" cx="13.500" cy="26.500" r="5.500"/>
           <circle class="logo-a" cx="26.500" cy="26.500" r="5.500"/>
         </svg>
-        <span>Connect4</span>
+        <span>Four</span>
       </a>
       <p class="credit">Made with ❤️ by <a href="https://mco.dev/">Marc Cohen</a></p>
     </div>
     <div class="top-actions">
-      <button class="icon-btn" type="button" command="show-modal" commandfor="info" aria-label="About Connect4">
+      <button class="icon-btn" type="button" command="show-modal" commandfor="info" aria-label="About Four">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.500v.010"/></svg>
       </button>
       <button class="icon-btn" type="button" command="show-modal" commandfor="settings" aria-label="Settings">
@@ -103,7 +103,7 @@
 
   <!-- ───────────── Game ───────────── -->
   <main id="game" class="game" hidden>
-    <section class="table" aria-label="Connect Four board">
+    <section class="table" aria-label="Four board">
       <div class="seat" id="seat-them">
         <span class="chip small"><i class="token them"></i></span>
         <span class="seat-name">Opponent</span>
@@ -191,8 +191,8 @@
 
   <!-- ───────────── Info ───────────── -->
   <dialog id="info" class="sheet wide" aria-labelledby="info-title" closedby="any">
-    <h2 id="info-title">About Connect4</h2>
-    <p>Connect Four for two people, wherever they are. There are no accounts, no ads and no saved games: just a board and a friend.</p>
+    <h2 id="info-title">About Four</h2>
+    <p>Four in a row, for two people wherever they are. There are no accounts, no ads and no saved games: just a board and a friend.</p>
 
     <h3>Starting a game</h3>
     <ol>
@@ -214,7 +214,7 @@
     <p>Turn on your camera or microphone at any time during a game, or just type. Each of you decides separately what to share.</p>
 
     <h3>Privacy</h3>
-    <p>Connect4 is a static page. A public <a href="https://peerjs.com/" target="_blank" rel="noopener">PeerJS</a> server introduces your two browsers using the game code; after that, moves, chat, video and audio travel directly between you over WebRTC. Nothing is recorded, and only your color settings are saved, in this browser.</p>
+    <p>Four is a static page. A public <a href="https://peerjs.com/" target="_blank" rel="noopener">PeerJS</a> server introduces your two browsers using the game code; after that, moves, chat, video and audio travel directly between you over WebRTC. Nothing is recorded, and only your color settings are saved, in this browser.</p>
 
     <div class="sheet-actions">
       <button class="btn primary" type="button" data-close autofocus>Got it</button>

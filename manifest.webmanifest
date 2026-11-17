@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Connect4",
-  "short_name": "Connect4",
-  "description": "Play Connect Four with a friend, wherever they are. Moves travel directly between your two browsers.",
+  "name": "Four",
+  "short_name": "Four",
+  "description": "Play four in a row with a friend, wherever they are. Moves travel directly between your two browsers.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
