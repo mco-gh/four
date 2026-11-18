@@ -434,3 +434,8 @@ dialog.sheet[open] { display: grid; gap: .9rem; }
 }
 .theme-swatch i { inline-size: .8rem; block-size: .8rem; border-radius: 50%; background: var(--me); box-shadow: 0 0 0 1.5px rgb(0 0 0 / .3); }
 .theme-swatch i + i { background: var(--them); }
+
+/* Copyright notice at the foot of the page. */
+.copyright { margin: 0; padding: 1.5rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px)); text-align: center; font-size: 0.8rem; color: var(--ink-soft); }
+/* Only on the start screen: during a game or call the main view fills the window. */
+body:has(#lobby[hidden]) .copyright { display: none; }
