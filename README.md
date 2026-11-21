@@ -7,6 +7,7 @@ It is a static app with no build step: open `index.html` from any web server. Th
 - `rules.js`: the game (dropping discs, four in a row, a full board)
 - `board.js`: draws the board and turns clicks, taps and keys into moves
 - `net.js`, `ice.js`: the link between the two browsers
+- `bot.js`: the computer opponent (Easy, Medium or Hard), which stands in for the link and plays the other side, searching a few moves ahead
 - `app.js`: the lobby, game flow, rematches and score, chat, video and settings
 
 This repo is mounted in [mco-gh/mco.dev](https://github.com/mco-gh/mco.dev) as a git submodule at `static/four`. After pushing a change here, update the submodule pointer there to publish it:

@@ -7,6 +7,7 @@ const PRECACHE = [
   "./",
   "./app.js",
   "./board.js",
+  "./bot.js",
   "./rules.js",
   "./icon.svg",
   "./ice.js",

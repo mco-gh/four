@@ -3,6 +3,7 @@
 import * as Rules from './rules.js';
 import { Board } from './board.js';
 import { openLink, newCode, cleanCode } from './net.js';
+import { openBot, LEVELS as BOT_LEVELS } from './bot.js';
 
 const $ = (id) => document.getElementById(id);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -66,7 +67,8 @@ for (const input of document.querySelectorAll('[data-color]')) {
 applyColors();
 
 // ── State ────────────────────────────────────────────────────────────────────
-let link = null;          // the connection, or null
+let link = null;          // the connection (or the computer), or null
+let vsBot = null;         // the computer's level when playing it, else null
 let host = false;
 let code = '';
 let mine = 0;             // this player's seat: 0 moves first, 1 second
@@ -135,6 +137,8 @@ function setLobby(state, error = '') {
 function show(screen) {
   $('lobby').hidden = screen !== 'lobby';
   $('game').hidden = screen !== 'game';
+  document.body.dataset.vs = vsBot ? 'bot' : 'friend';
+  $('them-name').textContent = vsBot ? 'Computer' : 'Opponent';
 }
 
 const inviteLink = () => `${location.origin}${location.pathname}#${code}`;
@@ -153,9 +157,10 @@ function connect() {
   if (!game) setLobby(host ? 'opening' : 'joining');
   // Ignore callbacks from a connection we have already replaced or dropped.
   const guard = (fn) => (...args) => { if (link === current) fn(...args); };
-  const current = openLink({
+  const current = (vsBot ? openBot : openLink)({
     code,
     host,
+    level: vsBot,
     on: {
       waiting: guard(() => { if (!game) setLobby('waiting'); }),
       open: guard(onPeer),
@@ -229,16 +234,25 @@ function toLobby(error = '') {
 $('start-form').addEventListener('submit', (event) => {
   event.preventDefault();
   host = true;
-  const first = new FormData(event.target).get('first');
+  const form = new FormData(event.target);
+  const first = form.get('first');
+  vsBot = event.submitter?.value === 'bot' ? (BOT_LEVELS[form.get('bot')] ? form.get('bot') : 'medium') : null;
+  if (vsBot) try { localStorage.setItem('four-bot', vsBot); } catch {}
   mine = first === 'r' ? crypto.getRandomValues(new Uint8Array(1))[0] & 1 : first === 'me' ? 0 : 1;
-  code = newCode();
+  code = vsBot ? 'computer' : newCode();
   connect();
 });
+try {
+  const saved = localStorage.getItem('four-bot');
+  const input = document.querySelector(`input[name="bot"][value="${saved}"]`);
+  if (input) input.checked = true;
+} catch {}
 
 function join(text) {
   const wanted = cleanCode(text);
   if (wanted.length !== 7) return setLobby('idle', 'A game code looks like abc-def.');
   host = false;
+  vsBot = null;
   code = wanted;
   history.replaceState(null, '', `#${code}`);
   connect();
@@ -323,16 +337,16 @@ function render(how = {}) {
 
   let status = '';
   if (result) status = 'Game over.';
-  else if (!game.moves.length) status = myTurn ? 'You go first. Drop a disc!' : 'They go first. Get ready…';
+  else if (!game.moves.length) status = myTurn ? 'You go first. Drop a disc!' : vsBot ? 'The computer goes first…' : 'They go first. Get ready…';
   else if (myTurn) status = 'Your turn. Drop a disc!';
-  else status = 'Waiting for your opponent…';
+  else status = vsBot ? 'The computer is thinking…' : 'Waiting for your opponent…';
   $('status').textContent = status;
   document.title = myTurn && playing ? `Your turn · ${TITLE}` : TITLE;
 
   $('resign').hidden = !playing;
 
   $('link-state').dataset.state = peerHere ? 'on' : 'off';
-  $('link-text').textContent = peerHere ? 'Connected' : host ? `Away. They can rejoin with ${code}` : 'Disconnected';
+  $('link-text').textContent = vsBot ? `🤖 ${BOT_LEVELS[vsBot].name}` : peerHere ? 'Connected' : host ? `Away. They can rejoin with ${code}` : 'Disconnected';
 
   $('over').hidden = playing;
   if (result) {
@@ -378,11 +392,11 @@ function celebrate() {
   const { kind, winner } = game.result;
   const won = winner === mine;
   if (kind === 'four') {
-    $('over-title').textContent = won ? 'Four in a row! You win 🎉' : 'They got four in a row';
-    $('over-sub').textContent = won ? 'Nicely played.' : 'Your opponent wins. Fancy a rematch?';
+    $('over-title').textContent = won ? 'Four in a row! You win 🎉' : vsBot ? 'The computer got four in a row' : 'They got four in a row';
+    $('over-sub').textContent = won ? 'Nicely played.' : `${vsBot ? 'The computer' : 'Your opponent'} wins. Fancy a rematch?`;
   } else if (kind === 'resign') {
     $('over-title').textContent = won ? 'You win! 🎉' : 'You resigned';
-    $('over-sub').textContent = won ? 'Your opponent resigned.' : 'Your opponent wins. Fancy a rematch?';
+    $('over-sub').textContent = won ? 'Your opponent resigned.' : `${vsBot ? 'The computer' : 'Your opponent'} wins. Fancy a rematch?`;
   } else {
     $('over-title').textContent = 'It’s a draw 🤝';
     $('over-sub').textContent = 'The board is full, and nobody got four.';
