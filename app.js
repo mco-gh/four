@@ -75,6 +75,7 @@ let mine = 0;             // this player's seat: 0 moves first, 1 second
 let game = null;
 let peerHere = false;
 let celebrated = false;
+let peeking = false;      // the game-over card is tucked away to look at the board
 let score = { me: 0, them: 0 };
 let scored = null;        // the game whose result is already counted
 
@@ -305,6 +306,7 @@ function takeScore(sent) {
 /** Put a game on screen. */
 function begin() {
   celebrated = false;
+  peeking = false;
   scored = game.result ? game : null;   // a game already over when we arrive was counted by the host
   $('confetti').replaceChildren();
   show('game');
@@ -349,10 +351,12 @@ function render(how = {}) {
   $('link-text').textContent = vsBot ? `🤖 ${BOT_LEVELS[vsBot].name}` : peerHere ? 'Connected' : host ? `Away. They can rejoin with ${code}` : 'Disconnected';
 
   $('over').hidden = playing;
+  $('over').classList.toggle('tucked', peeking);
+  $('peek').textContent = peeking ? 'Show the result' : 'See the board';
   if (result) {
     if ($('resign-ask').open) $('resign-ask').close();
-    // Let the winning disc land before the banner covers the board.
-    $('over').style.animationDelay = how.drop != null ? '.6s' : '0s';
+    // Let the winning disc land, and the winning four light up, before the banner covers the board.
+    $('over').style.animationDelay = how.drop != null ? '1.4s' : '0s';
     celebrate();
   }
 }
@@ -380,6 +384,12 @@ function rematch() {
   mine = winner === null ? 1 - mine : winner === mine ? 1 : 0;
   startGame();
 }
+
+$('peek').addEventListener('click', () => {
+  peeking = !peeking;
+  $('over').style.animationDelay = '0s';
+  render();
+});
 
 $('again').addEventListener('click', () => {
   if (!game?.result) return;

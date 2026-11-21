@@ -306,6 +306,10 @@ a { color: var(--violet); }
   .over { animation: pop .35s both; }
   @keyframes pop { from { opacity: 0; scale: .85; } }
 }
+/* Tucked away to look at the board: a small pill sitting on the board's top edge. */
+.over.tucked { inset-block: 0 auto; translate: 0 -50%; padding: .35rem 1rem; background: rgb(20 12 50 / .85); }
+.over.tucked > :not(#peek) { display: none; }
+.link-btn.light { color: #fff; }
 .over-title { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 900; text-wrap: balance; }
 .over-sub { margin-block-end: .4rem; text-wrap: balance; }
 .confetti { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; border-radius: 3.5%; }
