@@ -124,11 +124,16 @@
       <div class="board-wrap">
         <div id="board"></div>
         <div class="confetti" id="confetti" aria-hidden="true"></div>
-        <div class="over" id="over" hidden>
-          <p class="over-title" id="over-title"></p>
-          <p class="over-sub" id="over-sub"></p>
-          <button class="btn primary" type="button" id="again">Play again</button>
-          <button class="link-btn light" type="button" id="peek">See the board</button>
+        <div class="over" id="over" role="status" hidden>
+          <span class="over-icon" id="over-icon" aria-hidden="true"></span>
+          <div class="over-words">
+            <p class="over-title" id="over-title"></p>
+            <p class="over-sub" id="over-sub"></p>
+          </div>
+          <div class="over-actions">
+            <button class="btn small primary" type="button" id="again">Play again</button>
+          </div>
+          <button class="over-close" type="button" id="over-close" aria-label="Close">×</button>
         </div>
       </div>
 
@@ -138,6 +143,7 @@
         <span class="wins" id="wins-me"></span>
         <p class="status" id="status" role="status"></p>
         <div class="actions">
+          <button class="btn small primary" type="button" id="show-result" hidden>Show result</button>
           <button class="btn small ghost danger-text" type="button" id="resign" command="show-modal" commandfor="resign-ask" hidden>Resign</button>
         </div>
       </div>

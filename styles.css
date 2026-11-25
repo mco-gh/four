@@ -210,7 +210,7 @@ a { color: var(--violet); }
 
 .table { display: grid; gap: .6rem; justify-items: center; }
 .board-wrap, .seat { inline-size: min(100%, max(18rem, 100dvh - 13rem), 40rem); }
-.board-wrap { position: relative; }
+.board-wrap { position: relative; container-type: inline-size; }
 
 .seat {
   display: flex; align-items: center; gap: .6rem; flex-wrap: wrap;
@@ -296,22 +296,42 @@ a { color: var(--violet); }
 .col:focus-visible { outline: .7cqw solid #fff; outline-offset: -.7cqw; box-shadow: inset 0 0 0 1.2cqw #17122b; }
 
 /* ── Game over ── */
+/* The result pops up just above the board, over the opponent's bar and the empty
+   drop strip, so every disc stays in view. A small tail points down at the board. */
 .over {
-  position: absolute; inset: 0; margin: auto; z-index: 2; inline-size: fit-content; block-size: fit-content;
-  max-inline-size: 88%; display: grid; justify-items: center; gap: .5rem; padding: 1.2rem 1.6rem;
-  border-radius: 24px; text-align: center; color: #fff;
-  background: rgb(20 12 50 / .84); backdrop-filter: blur(4px); box-shadow: 0 18px 40px rgb(0 0 0 / .45);
+  position: absolute; z-index: 3; --strip: calc((100cqw - 5.2cqw) / 7);
+  inset-block-end: calc(100% - var(--strip)); inset-inline: 0; margin-inline: auto;
+  inline-size: 100%;
+  display: flex; align-items: center; flex-wrap: wrap; gap: .4rem .7rem; padding: .5rem 2.1rem .5rem .8rem;
+  border-radius: 18px; background: var(--surface); border: 2px solid var(--line); color: var(--ink);
+  box-shadow: 0 14px 30px -10px rgb(40 20 90 / .55);
 }
+.over::after {
+  content: ""; position: absolute; inset-block-start: 100%; inset-inline-start: calc(50% - .5rem);
+  border: .5rem solid transparent; border-block-start-color: var(--tail, var(--surface));
+}
+.over[data-outcome="won"] {
+  --tail: light-dark(#a243b6, #a955c0);
+  border-color: transparent; color: #fff;
+  background: linear-gradient(135deg, light-dark(#6c4cf1, #7a5cf5), light-dark(#d93a7c, #d94f8a));
+}
+.over[data-outcome="drawn"] { border-color: var(--sky); }
+.over-close {
+  position: absolute; inset-block-start: .3rem; inset-inline-end: .35rem; inline-size: 1.6rem; block-size: 1.6rem;
+  display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none;
+  font-size: 1.2rem; line-height: 1; color: inherit; opacity: .7; cursor: pointer;
+}
+.over-close:hover { opacity: 1; background: rgb(128 128 128 / .18); }
+.over-icon { font-size: 1.6rem; line-height: 1; }
+.over-words { flex: 1 1 auto; min-inline-size: 9rem; }
+.over-title { font-size: 1.1rem; font-weight: 900; line-height: 1.25; text-wrap: balance; }
+.over-sub { font-size: .88rem; font-weight: 600; opacity: .85; text-wrap: pretty; }
+.over-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-inline-start: auto; }
+.over[data-outcome="won"] .btn.primary { background: #fff; color: #6c4cf1; box-shadow: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .over { animation: pop .35s both; }
-  @keyframes pop { from { opacity: 0; scale: .85; } }
+  .over:not([hidden]) { animation: over-in .35s cubic-bezier(.3, .1, .2, 1.3) both; transform-origin: 50% 100%; }
+  @keyframes over-in { from { opacity: 0; scale: .85; translate: 0 8px; } }
 }
-/* Tucked away to look at the board: a small pill sitting on the board's top edge. */
-.over.tucked { inset-block: 0 auto; translate: 0 -50%; padding: .35rem 1rem; background: rgb(20 12 50 / .85); }
-.over.tucked > :not(#peek) { display: none; }
-.link-btn.light { color: #fff; }
-.over-title { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 900; text-wrap: balance; }
-.over-sub { margin-block-end: .4rem; text-wrap: balance; }
 .confetti { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; border-radius: 3.5%; }
 .confetti i { display: none; }
 @media (prefers-reduced-motion: no-preference) {

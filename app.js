@@ -75,7 +75,7 @@ let mine = 0;             // this player's seat: 0 moves first, 1 second
 let game = null;
 let peerHere = false;
 let celebrated = false;
-let peeking = false;      // the game-over card is tucked away to look at the board
+let overClosed = false;   // the result popup was closed for this game
 let score = { me: 0, them: 0 };
 let scored = null;        // the game whose result is already counted
 
@@ -306,7 +306,7 @@ function takeScore(sent) {
 /** Put a game on screen. */
 function begin() {
   celebrated = false;
-  peeking = false;
+  overClosed = false;
   scored = game.result ? game : null;   // a game already over when we arrive was counted by the host
   $('confetti').replaceChildren();
   show('game');
@@ -338,7 +338,7 @@ function render(how = {}) {
   $('wins-them').textContent = wins(score.them);
 
   let status = '';
-  if (result) status = 'Game over.';
+  if (result) status = '';             // the result has its own popup above the board
   else if (!game.moves.length) status = myTurn ? 'You go first. Drop a disc!' : vsBot ? 'The computer goes first…' : 'They go first. Get ready…';
   else if (myTurn) status = 'Your turn. Drop a disc!';
   else status = vsBot ? 'The computer is thinking…' : 'Waiting for your opponent…';
@@ -350,12 +350,11 @@ function render(how = {}) {
   $('link-state').dataset.state = peerHere ? 'on' : 'off';
   $('link-text').textContent = vsBot ? `🤖 ${BOT_LEVELS[vsBot].name}` : peerHere ? 'Connected' : host ? `Away. They can rejoin with ${code}` : 'Disconnected';
 
-  $('over').hidden = playing;
-  $('over').classList.toggle('tucked', peeking);
-  $('peek').textContent = peeking ? 'Show the result' : 'See the board';
+  $('over').hidden = playing || overClosed;
+  $('show-result').hidden = playing || !overClosed;
   if (result) {
     if ($('resign-ask').open) $('resign-ask').close();
-    // Let the winning disc land, and the winning four light up, before the banner covers the board.
+    // Let the winning disc land, and the winning four light up, before the result pops up.
     $('over').style.animationDelay = how.drop != null ? '1.4s' : '0s';
     celebrate();
   }
@@ -385,9 +384,13 @@ function rematch() {
   startGame();
 }
 
-$('peek').addEventListener('click', () => {
-  peeking = !peeking;
-  $('over').style.animationDelay = '0s';
+$('over-close').addEventListener('click', () => {
+  overClosed = true;
+  render();
+});
+
+$('show-result').addEventListener('click', () => {
+  overClosed = false;
   render();
 });
 
@@ -402,17 +405,21 @@ function celebrate() {
   const { kind, winner } = game.result;
   const won = winner === mine;
   if (kind === 'four') {
-    $('over-title').textContent = won ? 'Four in a row! You win 🎉' : vsBot ? 'The computer got four in a row' : 'They got four in a row';
+    $('over-title').textContent = won ? 'Four in a row! You win' : vsBot ? 'The computer got four in a row' : 'They got four in a row';
     $('over-sub').textContent = won ? 'Nicely played.' : `${vsBot ? 'The computer' : 'Your opponent'} wins. Fancy a rematch?`;
   } else if (kind === 'resign') {
-    $('over-title').textContent = won ? 'You win! 🎉' : 'You resigned';
+    $('over-title').textContent = won ? 'You win!' : 'You resigned';
     $('over-sub').textContent = won ? 'Your opponent resigned.' : `${vsBot ? 'The computer' : 'Your opponent'} wins. Fancy a rematch?`;
   } else {
-    $('over-title').textContent = 'It’s a draw 🤝';
+    $('over-title').textContent = 'It’s a draw';
     $('over-sub').textContent = 'The board is full, and nobody got four.';
   }
+  $('over').dataset.outcome = won ? 'won' : winner === null ? 'drawn' : 'lost';
+  $('over-icon').textContent = won ? '🏆' : winner === null ? '🤝' : '🏳️';
   if (celebrated) return;
   celebrated = true;
+  // On a short screen, bring the result (and the board under it) into view.
+  requestAnimationFrame(() => $('over').scrollIntoView({ block: 'nearest' }));
   const confetti = $('confetti');
   confetti.replaceChildren();
   if (!won) return;
