@@ -83,7 +83,6 @@ export class Board {
     for (const [cell, disc] of this.discs) {
       disc.classList.toggle('last', cell === last && !line.size);
       disc.classList.toggle('win', line.has(cell));
-      disc.classList.toggle('dim', line.size > 0 && !line.has(cell));
     }
     this.el.classList.toggle('done', Boolean(game.result));
     this.refresh();

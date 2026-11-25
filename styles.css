@@ -258,8 +258,10 @@ a { color: var(--violet); }
 .disc.last::after {
   content: ""; position: absolute; inset: 43%; border-radius: 50%; background: rgb(255 255 255 / .75);
 }
-.disc.dim::before { opacity: .4; filter: saturate(.5); }
-.disc.win::before { box-shadow: 0 0 0 .9cqw var(--glow), 0 0 3cqw var(--glow); }
+/* The winning four come out in front of the frame, ringed and glowing. The other
+   discs keep their colors, so the final position reads in full. */
+.disc.win { z-index: 1; }
+.disc.win::before { box-shadow: 0 0 0 .5cqw #fff, 0 0 0 1.3cqw var(--glow), 0 0 4cqw var(--glow); }
 @media (prefers-reduced-motion: no-preference) {
   .disc.win::before { animation: cheer .7s ease-in-out infinite alternate; }
   @keyframes cheer { to { scale: 1.1; } }
